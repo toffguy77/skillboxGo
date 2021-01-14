@@ -2,24 +2,23 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"math"
 )
 
 func main() {
-	fmt.Print("Введите месяц: ")
-	var month string
-	fmt.Scan(&month)
+	var (
+		maxUint8  int
+		maxUint16 int
+	)
 
-	switch strings.ToLower(month) {
-	case "декабрь", "январь", "февраль":
-		fmt.Println("зима")
-	case "март", "аперль", "май":
-		fmt.Println("весна")
-	case "июнь", "июль", "август":
-		fmt.Println("лето")
-	case "сентябрь", "октябрь", "ноябрь":
-		fmt.Println("осень")
-	default:
-		fmt.Println("это вообще не месяц")
+	for i := 1; i < math.MaxUint32; i++ {
+		if i&math.MaxUint8 == 0 {
+			maxUint8++
+
+		}
+		if i&math.MaxUint16 == 0 {
+			maxUint16++
+		}
 	}
+	fmt.Printf("Количество переполнений: %d Uint8, %d Uint16", maxUint8, maxUint16)
 }

@@ -2,12 +2,24 @@ package main
 
 import (
 	"fmt"
-	"time"
-
-	"github.com/coreos/go-systemd/daemon"
+	"strings"
 )
 
 func main() {
-	time.Sleep(time.Second * 3)
-	fmt.Println(daemon.SdNotify(false, daemon.SdNotifyReady))
+	fmt.Print("Введите месяц: ")
+	var month string
+	fmt.Scan(&month)
+
+	switch strings.ToLower(month) {
+	case "декабрь", "январь", "февраль":
+		fmt.Println("зима")
+	case "март", "аперль", "май":
+		fmt.Println("весна")
+	case "июнь", "июль", "август":
+		fmt.Println("лето")
+	case "сентябрь", "октябрь", "ноябрь":
+		fmt.Println("осень")
+	default:
+		fmt.Println("это вообще не месяц")
+	}
 }
