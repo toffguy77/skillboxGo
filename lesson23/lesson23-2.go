@@ -58,7 +58,7 @@ func countLetters(letters []rune, lastWords []string) [][]int {
 	res := createMatrix(numsWords, numsLetters)
 	for i := 0; i < numsWords; i++ {
 		for j := 0; j < numsLetters; j++ {
-			res[i][j] += strings.IndexRune(lastWords[j], letters[i])
+			res[i][j] = strings.IndexRune(lastWords[i], letters[j])
 		}
 	}
 	return res
