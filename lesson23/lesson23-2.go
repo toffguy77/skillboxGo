@@ -94,7 +94,12 @@ func readSentences(n int, sentences *[]string) {
 			log.Printf("error reading: %v", err)
 			continue
 		}
-		strings.TrimSpace(sentence)
+		sentence = strings.TrimSpace(sentence)
+		if sentence == "" {
+			fmt.Println("Sentence should contain at least one word")
+			i -= 1
+			continue
+		}
 		*sentences = append(*sentences, sentence)
 	}
 }
