@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -18,14 +19,18 @@ type Result struct {
 
 func main() {
 	var (
-		wg  sync.WaitGroup
-		res Result
+		wg      sync.WaitGroup
+		res     Result
+		logfile string
 	)
+
+	flag.StringVar(&logfile, "log", "logfile", "output log filename")
+	flag.Parse()
 
 	toSquareChan := input(&wg, res)
 	toDoubleChan := squared(&wg, toSquareChan)
 	resChan := doubled(&wg, toDoubleChan)
-	printResults(&wg, resChan)
+	printResults(&wg, resChan, logfile)
 
 	wg.Wait()
 }
@@ -94,9 +99,9 @@ func doubled(wg *sync.WaitGroup, toDoubleChan chan Result) chan Result {
 	return resChan
 }
 
-func printResults(wg *sync.WaitGroup, resChan chan Result) {
+func printResults(wg *sync.WaitGroup, resChan chan Result, logfile string) {
 	wg.Add(1)
-	log.SetOutput(setLogFile())
+	log.SetOutput(setLogFile(logfile))
 
 	go func() {
 		defer close(resChan)
@@ -107,8 +112,8 @@ func printResults(wg *sync.WaitGroup, resChan chan Result) {
 	}()
 }
 
-func setLogFile() (f *os.File) {
-	f, err := os.OpenFile("logfile", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+func setLogFile(logfile string) (f *os.File) {
+	f, err := os.OpenFile(logfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
