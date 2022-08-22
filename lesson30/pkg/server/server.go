@@ -188,8 +188,8 @@ func MakeFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var req FriendRequest{}
-	req := models.FriendRequest{1, 2}
+	var req models.FriendRequest
+	// req := models.FriendRequest{1, 2}
 	err = json.Unmarshal(content, &req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -209,7 +209,7 @@ func MakeFriend(w http.ResponseWriter, r *http.Request) {
 		updatedSource := store.Get(source.ID)
 
 		w.WriteHeader(http.StatusOK)
-		sendResponse(w, http.StatusInternalServerError, *updatedSource, nil)
+		sendResponse(w, http.StatusOK, *updatedSource, nil)
 	}
 }
 

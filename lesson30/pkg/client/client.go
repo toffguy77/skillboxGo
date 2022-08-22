@@ -108,7 +108,7 @@ func GetUserFromResponse(resp []byte) (models.User, error) {
 }
 
 func MakeFriendsOnServer(source, target models.User) ([]byte, error) {
-	log.Printf("[CLIENT] adding friend %d for %d user", target.ID, source.ID)
+	log.Printf("[CLIENT] adding friend %d for user %d", target.ID, source.ID)
 
 	request := models.FriendRequest{
 		Source_id: source.ID,

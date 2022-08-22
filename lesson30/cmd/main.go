@@ -93,6 +93,7 @@ func clientRequests() {
 
 	// create friendship and check updated user
 	client.MakeFriendsOnServer(user1, user2)
+
 	client.GetUserFromServer(user1.ID)
 	client.GetFriendsFromServer(user1.ID)
 
