@@ -1,0 +1,4 @@
+github.com/go-chi/chi/v5 v5.0.7 h1:rDTPXLDHGATaeHvVlLcR4Qe0zftYethFucbjVQ1PxU8=
+github.com/go-chi/chi/v5 v5.0.7/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
+github.com/theothertomelliott/acyclic v0.0.0-20180926180839-eba177c77c8a h1:VE0Lt6y6rdH5Qw/U7JBZ8jw8N/t9NmzCiWf0nXGBusQ=
+github.com/theothertomelliott/acyclic v0.0.0-20180926180839-eba177c77c8a/go.mod h1:Lf1fgDzzzm31NWJNN1fjs0b0ozYFgalZM/lxm2AK+68=
