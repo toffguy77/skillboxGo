@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  http_server:
+    image: golang:alpine
+    ports:
+      - 8080:8080
+    build:
+      context: .
+      dockerfile: ./backend.Dockerfile
+    volumes:
+      - ./database/data:/http-server
+
+  load-balancer:
+    ports:
+      - 8080:80
+    depends_on:
+      - http_server
+    image: golang:alpine
+    build:
+      context: .
+      dockerfile: ./lb.Dockerfile
