@@ -6,22 +6,18 @@ import (
 )
 
 type Data struct {
-	SERVER1 string
-	SERVER2 string
-	PORT1   string
-	PORT2   string
+	PORT  string
+	PEERS string
 }
 
 type DataType string
 
-// Parse user input's flags
+// ParseUserFlags parses user input's flags
 func ParseUserFlags(ctx *context.Context) error {
 	userData := GetData(ctx)
 
-	flag.StringVar(&userData.SERVER1, "s1", "127.0.0.1", "server 1 IP address")
-	flag.StringVar(&userData.SERVER2, "s2", "127.0.0.1", "server 2 IP address")
-	flag.StringVar(&userData.PORT1, "port1", "54321", "server 1 port")
-	flag.StringVar(&userData.PORT2, "port2", "54322", "server 2 port")
+	flag.StringVar(&userData.PORT, "port", "54321", "server's port")
+	flag.StringVar(&userData.PEERS, "peers", "127.0.0.1:54321", "balancer upstream addresses in <IP:PORT>[,<IP:PORT>] format")
 	//TODO: add debug key
 	flag.Parse()
 

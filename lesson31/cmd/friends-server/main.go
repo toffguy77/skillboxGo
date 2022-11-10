@@ -7,7 +7,6 @@ import (
 	"skillbox/internal/flags"
 	"skillbox/internal/server"
 	"skillbox/middleware"
-	"sync"
 )
 
 func main() {
@@ -27,25 +26,9 @@ func main() {
 	s.Router.Use(middleware.CommonMiddleware)
 	s.MountHandlers()
 
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		log.Println("ready to serve")
-		err := http.ListenAndServe(":"+userData.PORT1, s.Router)
-		if err != nil {
-			log.Fatalf("[SERVER] can't start server: %v", err)
-		}
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		log.Println("ready to serve")
-		err := http.ListenAndServe(":"+userData.PORT2, s.Router)
-		if err != nil {
-			log.Fatalf("[SERVER] can't start server: %v", err)
-		}
-	}()
-
-	wg.Wait()
+	log.Println("ready to serve")
+	err = http.ListenAndServe(":"+userData.PORT, s.Router)
+	if err != nil {
+		log.Fatalf("[SERVER] can't start server: %v", err)
+	}
 }

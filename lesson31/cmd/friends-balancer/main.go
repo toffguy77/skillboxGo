@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"regexp"
 	"skillbox/internal/flags"
+	"strings"
 )
 
 var (
@@ -22,7 +24,7 @@ func serveReverseProxy(target string, res http.ResponseWriter, req *http.Request
 	// create the reverse proxy
 	proxy := httputil.NewSingleHostReverseProxy(&targetUrl)
 
-	// Note that ServeHttp is non blocking and uses a go routine under the hood
+	// Note that ServeHttp is non-blocking and uses a go routine under the hood
 	proxy.ServeHTTP(res, req)
 }
 
@@ -34,7 +36,21 @@ func logRequestPayload(proxyURL string) {
 // Balance returns one of the servers based using round-robin algorithm
 func getProxyURL() string {
 	userData := flags.GetData(&ctx)
-	var servers = []string{userData.SERVER1 + ":" + userData.PORT1, userData.SERVER2 + ":" + userData.PORT2}
+	peers := strings.Split(userData.PEERS, ",")
+
+	var servers []string
+	for _, peer := range peers {
+		ok, err := regexp.Match("[gG]e*k.*", []byte(peer))
+		if err != nil {
+			log.Printf("can't regexp peer for friends-balancer: %v\n", err)
+			continue
+		}
+		if !ok {
+			log.Printf("peer %s is not a valid <IP:PORT>\n", peer)
+			continue
+		}
+		servers = append(servers, peer)
+	}
 
 	server := servers[severCount]
 	severCount++
@@ -49,11 +65,11 @@ func getProxyURL() string {
 
 // Given a request send it to the appropriate url
 func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
-	url := getProxyURL()
+	proxyURL := getProxyURL()
 
-	logRequestPayload(url)
+	logRequestPayload(proxyURL)
 
-	serveReverseProxy(url, res, req)
+	serveReverseProxy(proxyURL, res, req)
 }
 
 func main() {
