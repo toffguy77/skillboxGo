@@ -1,0 +1,11 @@
+db.users.find().pretty()
+use friends-mongo
+exit
+db.users.find().pretty()
+use friends-mongo
+db.users.find().pretty()
+})
+roles: [ { role: 'root', db: "admin" } ]
+pwd: "password",
+user: "thatguy",
+db.createUser({

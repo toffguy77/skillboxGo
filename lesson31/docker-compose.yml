@@ -1,22 +1,22 @@
-version: "3.9"
+version: "3.8"
 
 services:
-  http_server:
-    image: golang:alpine
-    ports:
-      - 8080:8080
-    build:
-      context: .
-      dockerfile: ./backend.Dockerfile
+  mongodb:
+    image : mongo
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MONGO_INITDB_DATABASE=friends-mongo
+      - MONGO_INITDB_ROOT_USERNAME=thatguy
+      - MONGO_INITDB_ROOT_PASSWORD=pass12345
     volumes:
-      - ./database/data:/http-server
-
-  load-balancer:
+      - ./database:/data/db
     ports:
-      - 8080:80
-    depends_on:
-      - http_server
-    image: golang:alpine
-    build:
-      context: .
-      dockerfile: ./lb.Dockerfile
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo 127.0.0.1:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
