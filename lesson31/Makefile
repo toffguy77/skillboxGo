@@ -28,16 +28,17 @@ vendor:
 down:
 	docker compose down
 
+.PHONY: test
+test:
+	docker compose up -d mongodb
+	go test ./...
+	docker compose down
+
 .PHONY: clean
-clean:
+clean: down
 	@echo erase bin files
 	rm -f $(BUILD_DIR)/$(NAME_CLI)
-
 	@echo erase database
 	rm -rf database/*
-
-	#@echo erase docker containers
-	#@docker stop $(NAME_MONGO) || echo "no containers running"
-	#@docker rm $(NAME_MONGO) || echo "no containers found"
-
-	#@echo erase images
+	rm -rf database/.mongodb
+	docker rmi lesson31-balancer lesson31-server1 lesson31-server2 || echo "no previous images found"

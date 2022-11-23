@@ -229,7 +229,7 @@ func GetUserFromServer(cCtx *cli.Context) error {
 	}
 	resp, err := http.Get(fmt.Sprintf("http://%s:%s/users/%s", server, port, id))
 	if err != nil {
-		return errors.New(fmt.Sprintf("can't get user %d: %v", id, err))
+		return errors.New(fmt.Sprintf("can't get user %s: %v", id, err))
 	}
 	printResponse(resp)
 	return nil
@@ -284,7 +284,7 @@ func UpdateUserAtServer(cCtx *cli.Context) error {
 
 	jsonData, err := json.Marshal(u)
 	if err != nil {
-		return errors.New(fmt.Sprintf("can't parse user id %d: %v", id, err))
+		return errors.New(fmt.Sprintf("can't parse user id %s: %v", id, err))
 	}
 
 	client := &http.Client{}
@@ -342,7 +342,7 @@ func GetFriendsFromServer(cCtx *cli.Context) error {
 	}
 	resp, err := http.Get(fmt.Sprintf("http://%s:%s/friends/%s", server, port, id))
 	if err != nil {
-		return errors.New(fmt.Sprintf("can't get user %d: %v", id, err))
+		return errors.New(fmt.Sprintf("can't get user %s: %v", id, err))
 	}
 	printResponse(resp)
 	return nil

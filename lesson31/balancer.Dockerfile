@@ -11,5 +11,7 @@ RUN go build -o friends-balancer cmd/friends-balancer/main.go
 
 FROM debian:buster-slim
 COPY --from=builder /usr/src/app/friends-balancer /go/bin/friends-balancer
+
 EXPOSE 8080
 ENV PATH="/go/bin:${PATH}"
+ENTRYPOINT ["friends-balancer"]

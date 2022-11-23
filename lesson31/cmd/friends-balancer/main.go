@@ -88,5 +88,6 @@ func main() {
 	// start server
 	http.HandleFunc("/", handleRequestAndRedirect)
 
+	log.Println("load balancer started...")
 	log.Fatal(http.ListenAndServe("127.0.0.1:8080", nil))
 }

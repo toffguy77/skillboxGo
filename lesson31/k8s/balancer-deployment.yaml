@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -o k8s
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: balancer
+  name: balancer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: balancer
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o k8s
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: balancer
+    spec:
+      containers:
+        - args:
+            - friends-balancer
+            - -port
+            - "8080"
+            - -peers
+            - 127.0.0.1:54322,127.0.0.1:54323
+          image: cr.yandex/crpo4pc4dpmte0trjgak/balancer
+          name: balancer
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}

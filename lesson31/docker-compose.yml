@@ -4,9 +4,9 @@ services:
   balancer:
     build:
       dockerfile: balancer.Dockerfile
-    networks:
-      - host
-    command: friends-balancer -peers 127.0.0.1:54321,127.0.0.1:54322
+    image: "lesson31-balancer"
+    network_mode: "host"
+    command: "friends-balancer -port 8080 -peers 127.0.0.1:54322,127.0.0.1:54323"
     ports:
       - "8080:8080"
     depends_on:
@@ -16,9 +16,9 @@ services:
   server-instance1:
     build:
       dockerfile: server.Dockerfile
-    networks:
-      - host
-    command: friends-server
+    image: "lesson31-server1"
+    command: "friends-server"
+    network_mode: "host"
     ports:
       - "54322:54321"
     deploy:
@@ -32,9 +32,9 @@ services:
   server-instance2:
     build:
       dockerfile: server.Dockerfile
-    networks:
-      - host
-    command: friends-server
+    image: "lesson31-server2"
+    command: "friends-server"
+    network_mode: "host"
     ports:
       - "54323:54321"
     deploy:
@@ -64,8 +64,3 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-
-networks:
-  host:
-    external: true
-    name: host

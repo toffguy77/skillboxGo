@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -o k8s
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: server-instance2
+  name: server-instance2
+spec:
+  ports:
+    - name: "54323"
+      port: 54323
+      targetPort: 54321
+  selector:
+    io.kompose.service: server-instance2
+status:
+  loadBalancer: {}
