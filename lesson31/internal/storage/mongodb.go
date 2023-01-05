@@ -20,7 +20,7 @@ type UserRepo struct {
 
 var userNewObjectID primitive.ObjectID
 
-func NewUserRepo() *UserRepo {
+func NewUserRepo(DBName string) *UserRepo {
 	opts := options.Client()
 	opts.SetAuth(options.Credential{
 		AuthMechanism: "SCRAM-SHA-256",
@@ -41,7 +41,7 @@ func NewUserRepo() *UserRepo {
 	if err != nil {
 		log.Fatal(err)
 	}
-	collectionDB := clientDB.Database("friends-mongo").Collection("users")
+	collectionDB := clientDB.Database(DBName).Collection("users")
 
 	return &UserRepo{
 		client:     clientDB,
@@ -153,12 +153,12 @@ func (r *UserRepo) Update(u *models.User) (*models.User, error) {
 
 	if updateResult.MatchedCount == 0 {
 		error404 := errors.New(fmt.Sprintf("user %v not found", u.ID))
-		return &models.User{}, error404
+		return nil, error404
 	}
 
 	if updateResult.ModifiedCount == 0 {
 		error404 := errors.New(fmt.Sprintf("user %v not found", u.ID))
-		return &models.User{}, error404
+		return nil, error404
 	}
 
 	updatedUserFromDB := r.Get(u.ID)
@@ -182,11 +182,13 @@ func (r *UserRepo) MakeFriend(source, target *models.User) (*models.User, error)
 	if updateResult.MatchedCount == 0 {
 		error404 := errors.New(fmt.Sprintf("user %v not found", target.ID))
 		return &models.User{}, error404
+		// TODO: replace with NIL
 	}
 
 	if updateResult.ModifiedCount == 0 {
 		error500 := errors.New(fmt.Sprintf("user %v was not updated", target.ID))
 		return &models.User{}, error500
+		// TODO: replace with NIL
 	}
 
 	updatedUser := r.Get(target.ID)

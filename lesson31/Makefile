@@ -7,7 +7,7 @@ NAME_LB = friends-balancer
 build = cli
 
 .PHONY: all
-all: clean up
+all: clean test up
 
 .PHONY: up
 up: $(build) down
@@ -28,9 +28,12 @@ vendor:
 down:
 	docker compose down
 
-.PHONY: test
-test:
+.PHONY: mongo
+mongo:
 	docker compose up -d mongodb
+
+.PHONY: test
+test: mongo
 	go test ./...
 	docker compose down
 

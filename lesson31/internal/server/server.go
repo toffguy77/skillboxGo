@@ -27,7 +27,7 @@ func (s *Server) MountHandlers() {
 	r.Use(middleware.AllowContentType("application/json"))
 	r.Use(middleware.CleanPath)
 
-	userRepo := storage.NewUserRepo()
+	userRepo := storage.NewUserRepo("friends-mongo")
 	h := controllers.NewBaseHandler(userRepo)
 
 	r.Route("/", func(r chi.Router) {

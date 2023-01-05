@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -10,10 +9,4 @@ func CommonMiddleware(next http.Handler) http.Handler {
 		w.Header().Add("Content-Type", "application/json")
 		next.ServeHTTP(w, r)
 	})
-}
-
-func CheckErr(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }
