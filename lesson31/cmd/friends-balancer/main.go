@@ -40,7 +40,7 @@ func getProxyURL() string {
 
 	var servers []string
 	for _, peer := range peers {
-		ok, err := regexp.Match("[gG]e*k.*", []byte(peer))
+		ok, err := regexp.Match("([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)((?::))(?:[0-9]+)", []byte(peer))
 		if err != nil {
 			log.Printf("can't regexp peer for friends-balancer: %v\n", err)
 			continue
