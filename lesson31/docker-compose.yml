@@ -1,9 +1,10 @@
-version: "3.8"
+version: "3.3"
 
 services:
   balancer:
     build:
       dockerfile: balancer.Dockerfile
+      context: .
     image: "lesson31-balancer"
     network_mode: "host"
     command: "friends-balancer -port 8080 -peers 127.0.0.1:54322,127.0.0.1:54323"
@@ -16,8 +17,8 @@ services:
   server-instance1:
     build:
       dockerfile: server.Dockerfile
+      context: .
     image: "lesson31-server1"
-    command: "friends-server"
     network_mode: "host"
     ports:
       - "54322:54321"
@@ -32,8 +33,8 @@ services:
   server-instance2:
     build:
       dockerfile: server.Dockerfile
+      context: .
     image: "lesson31-server2"
-    command: "friends-server"
     network_mode: "host"
     ports:
       - "54323:54321"

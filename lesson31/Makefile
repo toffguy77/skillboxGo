@@ -11,7 +11,7 @@ all: clean test up
 
 .PHONY: up
 up: $(build) down
-	docker compose up -d
+	docker-compose up -d
 
 .PHONY: cli
 cli: vendor
@@ -21,21 +21,22 @@ cli: vendor
 .PHONY: vendor
 vendor:
 	@echo vendoring...
-	go mod tidy
+	rm -rf ./vendor
 	go mod vendor
+	go mod tidy
 
 .PHONY: down
 down:
-	docker compose down
+	docker-compose down
 
 .PHONY: mongo
 mongo:
-	docker compose up -d mongodb
+	docker-compose up -d mongodb
 
 .PHONY: test
-test: mongo
+test: vendor mongo
 	go test ./...
-	docker compose down
+	docker-compose down
 
 .PHONY: clean
 clean: down

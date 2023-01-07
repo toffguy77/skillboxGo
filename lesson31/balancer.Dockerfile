@@ -1,4 +1,5 @@
 FROM golang:1.19 AS builder
+RUN apt update & apt upgrade -yy
 
 WORKDIR /usr/src/app
 
@@ -10,6 +11,8 @@ COPY . .
 RUN go build -o friends-balancer cmd/friends-balancer/main.go
 
 FROM debian:buster-slim
+RUN apt update & apt upgrade -yy
+
 COPY --from=builder /usr/src/app/friends-balancer /go/bin/friends-balancer
 
 EXPOSE 8080
