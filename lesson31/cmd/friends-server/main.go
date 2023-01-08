@@ -24,7 +24,7 @@ func main() {
 	log.Println("starting http server...")
 	s := server.CreateNewServer()
 	s.Router.Use(middleware.CommonMiddleware)
-	s.MountHandlers()
+	s.MountHandlers(&ctx)
 
 	log.Println("ready to serve")
 	err = http.ListenAndServe(":"+userData.PORT, s.Router)

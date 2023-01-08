@@ -16,9 +16,10 @@ var (
 )
 
 func createTestDB() {
-	testRepo = NewUserRepo("testdata")
-	ctx := context.Background()
-	if err := testRepo.collection.Drop(ctx); err != nil {
+	ctx1 := context.Background()
+	testRepo = NewUserRepo(&ctx1, "testdata")
+	ctx2 := context.Background()
+	if err := testRepo.collection.Drop(ctx2); err != nil {
 		panic(err)
 	}
 	userDima, _ = testRepo.Save(&models.User{

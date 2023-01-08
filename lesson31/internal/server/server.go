@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"log"
@@ -20,14 +21,14 @@ func CreateNewServer() *Server {
 	return s
 }
 
-func (s *Server) MountHandlers() {
+func (s *Server) MountHandlers(ctx *context.Context) {
 	r := s.Router
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.AllowContentType("application/json"))
 	r.Use(middleware.CleanPath)
 
-	userRepo := storage.NewUserRepo("friends-mongo")
+	userRepo := storage.NewUserRepo(ctx, "friends-mongo")
 	h := controllers.NewBaseHandler(userRepo)
 
 	r.Route("/", func(r chi.Router) {

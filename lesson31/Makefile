@@ -7,7 +7,7 @@ NAME_LB = friends-balancer
 build = cli
 
 .PHONY: all
-all: clean test up
+all: clean up
 
 .PHONY: up
 up: $(build) down

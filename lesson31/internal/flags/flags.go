@@ -8,6 +8,7 @@ import (
 type Data struct {
 	PORT  string
 	PEERS string
+	DB    string
 }
 
 type DataType string
@@ -17,8 +18,11 @@ func ParseUserFlags(ctx *context.Context) error {
 	userData := GetData(ctx)
 
 	flag.StringVar(&userData.PORT, "port", "54321", "server's port")
-	flag.StringVar(&userData.PEERS, "peers", "127.0.0.1:54322,127.0.0.1:54323", "balancer upstream addresses in <IP:PORT>[,<IP:PORT>] format")
+	flag.StringVar(&userData.PEERS, "peers", "server-instance1:54321,server-instance2:54321", "balancer upstream addresses in <IP:PORT>[,<IP:PORT>] format")
+	flag.StringVar(&userData.PEERS, "db", "mongodb:27017", "container and port for database connections")
 	//TODO: add debug key
+	//TODO: add IP:HOST validation
+
 	flag.Parse()
 
 	return nil

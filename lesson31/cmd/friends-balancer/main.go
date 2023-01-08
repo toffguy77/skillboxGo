@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"regexp"
 	"skillbox/internal/flags"
 	"strings"
 )
@@ -36,21 +35,8 @@ func logRequestPayload(proxyURL string) {
 // Balance returns one of the servers based using round-robin algorithm
 func getProxyURL() string {
 	userData := flags.GetData(&ctx)
-	peers := strings.Split(userData.PEERS, ",")
-
-	var servers []string
-	for _, peer := range peers {
-		ok, err := regexp.Match("([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)((?::))(?:[0-9]+)", []byte(peer))
-		if err != nil {
-			log.Printf("can't regexp peer for friends-balancer: %v\n", err)
-			continue
-		}
-		if !ok {
-			log.Printf("peer %s is not a valid <IP:PORT>\n", peer)
-			continue
-		}
-		servers = append(servers, peer)
-	}
+	servers := strings.Split(userData.PEERS, ",")
+	//TODO: add IP:HOST validation
 
 	server := servers[severCount]
 	severCount++

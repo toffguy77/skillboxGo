@@ -20,7 +20,9 @@ type UserRepo struct {
 
 var userNewObjectID primitive.ObjectID
 
-func NewUserRepo(DBName string) *UserRepo {
+func NewUserRepo(ctx *context.Context, DBName string) *UserRepo {
+	//userData := flags.GetData(ctx)
+
 	opts := options.Client()
 	opts.SetAuth(options.Credential{
 		AuthMechanism: "SCRAM-SHA-256",
@@ -28,12 +30,13 @@ func NewUserRepo(DBName string) *UserRepo {
 		Password:      "pass12345",
 	})
 	//clientDB, err := mongo.Connect(ctx, opts.ApplyURI(os.Getenv("MONGODB_URI")))
-	clientDB, err := mongo.NewClient(opts.ApplyURI("mongodb://127.0.0.1:27017"))
+	//clientDB, err := mongo.NewClient(opts.ApplyURI(fmt.Sprintf("mongodb://%s", userData.DB)))
+	clientDB, err := mongo.NewClient(opts.ApplyURI("mongodb://mongodb:27017"))
 	if err != nil {
 		panic(err)
 	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = clientDB.Connect(ctx)
+	ctxDatabaseClient, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = clientDB.Connect(ctxDatabaseClient)
 	if err != nil {
 		log.Fatal(err)
 	}

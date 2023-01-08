@@ -18,3 +18,4 @@ COPY --from=builder /usr/src/app/friends-server /go/bin/friends-server
 EXPOSE 54321
 ENV PATH="/go/bin:${PATH}"
 ENTRYPOINT ["friends-server"]
+CMD ["-db 'mongodb:27017'"]
