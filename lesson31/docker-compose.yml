@@ -50,6 +50,8 @@ services:
   mongodb:
     image : mongo
     container_name: mongodb
+    ports:
+      - "27017:27017"
     environment:
       - PUID=1000
       - PGID=1000

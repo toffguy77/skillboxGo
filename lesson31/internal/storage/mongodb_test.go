@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"skillbox/internal/flags"
 	"skillbox/internal/models"
 	"testing"
 
@@ -15,11 +16,22 @@ var (
 	userDima, userKristina, userVova *models.User
 )
 
+func createContext() *context.Context {
+	ctx := context.Background()
+	var (
+		dataCtx  flags.DataType = "dataType"
+		userData                = flags.Data{}
+	)
+	userData.DB = "127.0.0.1:27017"
+	ctx = context.WithValue(ctx, dataCtx, &userData)
+	return &ctx
+}
+
 func createTestDB() {
-	ctx1 := context.Background()
-	testRepo = NewUserRepo(&ctx1, "testdata")
-	ctx2 := context.Background()
-	if err := testRepo.collection.Drop(ctx2); err != nil {
+	ctxWithParams := createContext()
+	testRepo = NewUserRepo(ctxWithParams, "testdata")
+	ctxForDB := context.Background()
+	if err := testRepo.collection.Drop(ctxForDB); err != nil {
 		panic(err)
 	}
 	userDima, _ = testRepo.Save(&models.User{
