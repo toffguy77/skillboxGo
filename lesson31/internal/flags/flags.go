@@ -18,7 +18,7 @@ func ParseUserFlags(ctx *context.Context) error {
 	userData := GetData(ctx)
 
 	flag.StringVar(&userData.PORT, "port", "54321", "server's port")
-	flag.StringVar(&userData.PEERS, "peers", "server-instance1:54321,server-instance2:54321", "balancer upstream addresses in <IP:PORT>[,<IP:PORT>] format")
+	flag.StringVar(&userData.PEERS, "peers", "server-instance1:54321,server-instance2:54321", "balancer upstream addresses in <HOST:PORT>[,<HOST:PORT>] format")
 	flag.StringVar(&userData.DB, "db", "mongodb:27017", "container and port for database connections")
 	//TODO: add debug key
 	//TODO: add IP:HOST validation

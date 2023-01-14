@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io"
 	"log"
 	"net/http"
@@ -23,7 +22,7 @@ func NewBaseHandler(userRepo models.Storage) *BaseHandler {
 }
 
 func (h *BaseHandler) Get(w http.ResponseWriter, r *http.Request) {
-	id, _ := primitive.ObjectIDFromHex(chi.URLParam(r, "id"))
+	id := chi.URLParam(r, "id")
 	user := h.userRepo.Get(id)
 	if user == nil {
 		error404 := errors.New(fmt.Sprintf("user %v not found", id))
@@ -68,7 +67,7 @@ func (h *BaseHandler) AllUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *BaseHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	id, _ := primitive.ObjectIDFromHex(chi.URLParam(r, "id"))
+	id := chi.URLParam(r, "id")
 	err := h.userRepo.Delete(id)
 	if err != nil {
 		sendResponse(w, http.StatusNotFound, models.User{}, err)
@@ -114,8 +113,8 @@ func (h *BaseHandler) MakeFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	source := h.userRepo.Get(req.Source_id)
-	target := h.userRepo.Get(req.Target_id)
+	source := h.userRepo.Get(req.SourceID)
+	target := h.userRepo.Get(req.TargetID)
 	if &source != nil && &target != nil {
 		newSource, err := h.userRepo.MakeFriend(source, target)
 		if err != nil {
@@ -145,8 +144,8 @@ func (h *BaseHandler) DeleteFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	source := h.userRepo.Get(req.Source_id)
-	target := h.userRepo.Get(req.Target_id)
+	source := h.userRepo.Get(req.SourceID)
+	target := h.userRepo.Get(req.TargetID)
 	if &source != nil && &target != nil {
 		newSource, err := h.userRepo.DeleteFriend(source, target)
 		if err != nil {
@@ -162,7 +161,7 @@ func (h *BaseHandler) DeleteFriend(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *BaseHandler) GetFriends(w http.ResponseWriter, r *http.Request) {
-	id, _ := primitive.ObjectIDFromHex(chi.URLParam(r, "id"))
+	id := chi.URLParam(r, "id")
 	friends, err := h.userRepo.GetFriends(id)
 	if err != nil {
 		error404 := errors.New(fmt.Sprintf("user %v not found", id))

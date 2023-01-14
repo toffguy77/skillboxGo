@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io"
 	"log"
 	"net/http"
@@ -273,7 +272,7 @@ func UpdateUserAtServer(cCtx *cli.Context) error {
 	id := cCtx.String("id")
 	name := cCtx.String("name")
 	age := cCtx.Int("age")
-	objectID, _ := primitive.ObjectIDFromHex(id)
+	objectID := cCtx.String("id")
 
 	u := models.User{
 		ID:      objectID,
@@ -307,12 +306,12 @@ func UpdateUserAtServer(cCtx *cli.Context) error {
 }
 
 func MakeFriendsOnServer(cCtx *cli.Context) error {
-	sourceID, _ := primitive.ObjectIDFromHex(cCtx.String("s"))
-	targetID, _ := primitive.ObjectIDFromHex(cCtx.String("t"))
+	sourceID := cCtx.String("s")
+	targetID := cCtx.String("t")
 
 	request := models.FriendRequest{
-		Source_id: sourceID,
-		Target_id: targetID,
+		SourceID: sourceID,
+		TargetID: targetID,
 	}
 	jsonData, err := json.Marshal(request)
 	if err != nil {

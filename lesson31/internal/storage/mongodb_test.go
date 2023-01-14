@@ -7,8 +7,6 @@ import (
 	"skillbox/internal/flags"
 	"skillbox/internal/models"
 	"testing"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -35,11 +33,13 @@ func createTestDB() {
 		panic(err)
 	}
 	userDima, _ = testRepo.Save(&models.User{
+		ID:      "0",
 		Name:    "Dima",
 		Age:     27,
 		Friends: nil,
 	})
 	userKristina, _ = testRepo.Save(&models.User{
+		ID:      "1",
 		Name:    "Kristina",
 		Age:     22,
 		Friends: nil,
@@ -51,7 +51,7 @@ func createTestDB() {
 func TestUserRepo_Get(t *testing.T) {
 	createTestDB()
 	type args struct {
-		key primitive.ObjectID
+		id string
 	}
 	tests := []struct {
 		name string
@@ -61,22 +61,22 @@ func TestUserRepo_Get(t *testing.T) {
 		{
 			name: "get Dima",
 			args: args{
-				key: userDima.ID,
+				id: userDima.ID,
 			},
 			want: userDima,
 		},
 		{
 			name: "get Kristina",
 			args: args{
-				key: userKristina.ID,
+				id: userKristina.ID,
 			},
 			want: userKristina,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := testRepo.Get(tt.args.key)
-			if !reflect.DeepEqual(got.Name, tt.want.Name) && !reflect.DeepEqual(got.Age, tt.want.Age) && !reflect.DeepEqual(got.Friends, tt.want.Friends) && !got.ID.IsZero() {
+			got := testRepo.Get(tt.args.id)
+			if !reflect.DeepEqual(got.Name, tt.want.Name) && !reflect.DeepEqual(got.Age, tt.want.Age) && !reflect.DeepEqual(got.Friends, tt.want.Friends) && !reflect.DeepEqual(got.ID, tt.want.ID) {
 				t.Errorf("UserRepo.Get() = %v, want %v", got, tt.want)
 			}
 		})
@@ -130,7 +130,7 @@ func TestUserRepo_Save(t *testing.T) {
 				t.Errorf("UserRepo.Save() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(userVova.Name, tt.want.Name) && !reflect.DeepEqual(userVova.Age, tt.want.Age) && !reflect.DeepEqual(userVova.Friends, tt.want.Friends) && !userVova.ID.IsZero() {
+			if !reflect.DeepEqual(userVova.Name, tt.want.Name) && !reflect.DeepEqual(userVova.Age, tt.want.Age) && !reflect.DeepEqual(userVova.Friends, tt.want.Friends) && !reflect.DeepEqual(userVova.ID, tt.want.ID) {
 				t.Errorf("UserRepo.Save() = %v, want %v", userVova, tt.want)
 			}
 		})
@@ -160,7 +160,7 @@ func TestUserRepo_AllUsers(t *testing.T) {
 
 func TestUserRepo_Delete(t *testing.T) {
 	type args struct {
-		id primitive.ObjectID
+		id string
 	}
 	tests := []struct {
 		name    string
@@ -177,7 +177,7 @@ func TestUserRepo_Delete(t *testing.T) {
 		{
 			name: "delete not found",
 			args: args{
-				id: primitive.NewObjectID(),
+				id: "num",
 			},
 			wantErr: true,
 		},
@@ -217,7 +217,7 @@ func TestUserRepo_Update(t *testing.T) {
 			name: "update not found",
 			args: args{
 				u: &models.User{
-					ID:  primitive.NewObjectID(),
+					ID:  "num",
 					Age: 34,
 				},
 			},
@@ -278,7 +278,7 @@ func TestUserRepo_MakeFriend(t *testing.T) {
 
 func TestUserRepo_GetFriends(t *testing.T) {
 	type args struct {
-		id primitive.ObjectID
+		id string
 	}
 	tests := []struct {
 		name    string
@@ -350,7 +350,7 @@ func TestUserRepo_DeleteFriend(t *testing.T) {
 				t.Errorf("UserRepo.DeleteFriend() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got.Name, tt.want.Name) && !reflect.DeepEqual(got.Age, tt.want.Age) && !reflect.DeepEqual(got.Friends, tt.want.Friends) && !got.ID.IsZero() {
+			if !reflect.DeepEqual(got.Name, tt.want.Name) && !reflect.DeepEqual(got.Age, tt.want.Age) && !reflect.DeepEqual(got.Friends, tt.want.Friends) && !reflect.DeepEqual(got.ID, tt.want.ID) {
 				t.Errorf("UserRepo.DeleteFriend() = %v, want %v", got, tt.want)
 			}
 		})
