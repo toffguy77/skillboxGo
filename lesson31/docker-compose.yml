@@ -1,0 +1,74 @@
+version: "3.3"
+
+services:
+  balancer:
+    build:
+      dockerfile: balancer.Dockerfile
+      context: .
+    image: "lesson31-balancer"
+    command: "friends-balancer -port 8080 -peers server-instance1:54321,server-instance2:54321"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server-instance1
+      - server-instance2
+    networks:
+      - containers
+
+  server-instance1:
+    build:
+      dockerfile: server.Dockerfile
+      context: .
+    image: "lesson31-server1"
+    command: "friends-server"
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - mongodb
+    networks:
+      - containers
+
+  server-instance2:
+    build:
+      dockerfile: server.Dockerfile
+      context: .
+    image: "lesson31-server2"
+    command: "friends-server"
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - mongodb
+    networks:
+      - containers
+
+  mongodb:
+    image : mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MONGO_INITDB_DATABASE=friends-mongo
+      - MONGO_INITDB_ROOT_USERNAME=thatguy
+      - MONGO_INITDB_ROOT_PASSWORD=pass12345
+    volumes:
+      - ./database:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo 127.0.0.1:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - containers
+
+networks:
+  containers:
+  host:
